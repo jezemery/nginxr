@@ -60,6 +60,7 @@ export default class App extends React.Component {
             let parts = s[i].split("=");
             validator += '+1';
             redirect += "  if ($arg_" + parts[0] + " = \"" + parts[1].replace(new RegExp('%20', 'g'), ' ') + "\") {\r\n";
+            // eslint-disable-next-line no-template-curly-in-string
             redirect += '    set $validator "${validator}+1";\r\n';
             redirect += '  }\r\n';
         }
