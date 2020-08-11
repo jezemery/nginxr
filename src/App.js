@@ -1,5 +1,7 @@
 import React from 'react';
 import 'uikit/dist/css/uikit.min.css';
+import 'uikit/dist/js/uikit-icons.min';
+// eslint-disable-next-line no-unused-vars
 import './App.css';
 
 export default class App extends React.Component {
@@ -9,6 +11,7 @@ export default class App extends React.Component {
             redirect: '',
             origin: '',
             dest: '',
+            bulk: '',
         };
     }
 
@@ -72,51 +75,81 @@ export default class App extends React.Component {
         return redirect;
     }
 
+    addToList = () => {
+        let newRedirect = this.state.redirect;
+        let bulkCurrent = this.state.bulk;
+
+        document.querySelector("[name='destination-url']").value = "";
+        document.querySelector("[name='origin-url']").value = "";
+
+        const bulk = bulkCurrent + "\r\n" + newRedirect;
+        this.setState({
+            bulk: bulk
+        })
+        this.setState({
+            redirect: ''
+        })
+    }
+
     render = () => {
         return (
-            <form className="uk-form-width-large uk-align-center">
-                <div className="uk-margin">
-                    <label className="uk-form-label" htmlFor="origin-url">
-                        Origin
-                    </label>
-                    <div className="uk-form-controls">
-                        <input
-                            type="url"
-                            className="uk-input"
-                            name="origin-url"
-                            onChange={(e) => this.checkURL(e, this.handleUrlChange)}
-                            required
-                        />
+            <section>
+                <div id="sidebar" uk-offcanvas="mode: reveal; overlay: true">
+                    <div className="uk-offcanvas-bar">
+                        <button type="button" uk-close="" className="uk-icon uk-align-right uk-close"></button>
+                        <textarea className="uk-textarea" rows="30" id="redirect-bulk-output" disabled
+                                  data-role="none" defaultValue={this.state.bulk}/>
                     </div>
                 </div>
-                <div className="uk-margin">
-                    <label className="uk-form-label" htmlFor="destination-url">
-                        Destination
-                    </label>
-                    <div className="uk-form-controls">
-                        <input
-                            type="url"
-                            className="uk-input"
-                            name="destination-url"
-                            onChange={(e) => this.checkURL(e, this.updateDestination)}
-                            required
-                        />
+
+                <form className="uk-form-width-large uk-align-center">
+                    <div className="uk-margin">
+                        <label className="uk-form-label" htmlFor="origin-url">
+                            Origin
+                        </label>
+                        <div className="uk-form-controls">
+                            <input
+                                type="url"
+                                className="uk-input"
+                                name="origin-url"
+                                onChange={(e) => this.checkURL(e, this.handleUrlChange)}
+                                required
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="uk-margin uk-form-blank">
-                    <label className="uk-form-label" htmlFor="destination-url">
-                        Redirect
-                    </label>
-                    <div className="uk-form-controls">
+                    <div className="uk-margin">
+                        <label className="uk-form-label" htmlFor="destination-url">
+                            Destination
+                        </label>
+                        <div className="uk-form-controls">
+                            <input
+                                type="url"
+                                className="uk-input"
+                                name="destination-url"
+                                onChange={(e) => this.checkURL(e, this.updateDestination)}
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div className="uk-margin uk-form-blank">
+                        <label className="uk-form-label" htmlFor="destination-url">
+                            Redirect
+                        </label>
+                        <div className="uk-form-controls">
                         <textarea className="uk-textarea" rows="10" id="redirect-output" disabled data-role="none"
                                   defaultValue={this.state.redirect}/>
+                        </div>
                     </div>
+                </form>
+                <div className='uk-form-width-large uk-align-center'>
+                    <button className="uk-button uk-align-right uk-button-primary" onClick={this.addToList}>Add to list
+                    </button>
+                    <button className="uk-button uk-button-default uk-margin-small-right"
+                            uk-toggle="target: #sidebar">Reveal all
+                    </button>
                 </div>
-                <button className="uk-button uk-align-right uk-button-primary">Copy</button>
-            </form>
+            </section>
         );
     };
-
-
 }
 // export default App;
